@@ -3,7 +3,7 @@ name: 'ftx taoli'
 on:
   push:
   schedule:
-    - cron: '0 21 * * *'
+    - cron: '*/10 * * * *'
 
 
 jobs:
