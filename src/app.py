@@ -45,6 +45,7 @@ def get_btc_move_diff(futures):
             mark = i["mark"]  # 期货标记价格
             strikePrice = round(strikePrices[name]["strikePrice"], 4)  # 到期日开始时标的价格
             diff = round(abs(abs(c - strikePrice) - mark), 4)
+            c1 = round(abs(c - strikePrice), 4)  ## 预计交割价
             print(f"{name}: 行权价:{strikePrice}, BTC指数价:{c}, move价格:{mark},差价:{diff}")
             btc_moves.append(
                 {
@@ -53,6 +54,7 @@ def get_btc_move_diff(futures):
                     "strikePrice": strikePrice,
                     "diff": diff,
                     "name": name,
+                    "c1": c1,
                 }
             )
     return sorted(btc_moves, key=lambda k: k["diff"], reverse=True)
