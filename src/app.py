@@ -77,7 +77,8 @@ def get_future_diff(futures):
         if markets.get(spot_name, False):
             spot_price = markets[spot_name]["info"]["price"]
             diff = abs(Decimal(i["mark"]) - Decimal(spot_price))
-            rate = str(Decimal(diff) / Decimal(spot_price) * 100) + "%"
+            rate1 = Decimal(diff) / Decimal(spot_price) * 100
+            rate = str(rate1) + "%"
             diff = str(diff)
             print(f"name:{name},期货价:{i['mark']},现货价:{ spot_price},差价:{diff},差价%:{rate}")
             future_diff.append(
@@ -87,23 +88,24 @@ def get_future_diff(futures):
                     "spot_price": spot_price,
                     "diff": diff,
                     "rate": rate,
+                    "rate1": str(rate1),
                 }
             )
-    return sorted(future_diff, key=lambda k: k["rate"], reverse=True)
+    return sorted(future_diff, key=lambda k: k["rate1"], reverse=True)
 
 
 def main():
     futures = ftx.public_get_futures()["result"]
     future_diff = get_future_diff(futures)
-    move_diff = get_btc_move_diff(futures)
-    perpetual = get_perpetual(futures)[:20]
+    # move_diff = get_btc_move_diff(futures)
+    # perpetual = get_perpetual(futures)[:20]
 
     with open("future_diff.json", "w") as f:
         f.write(json.dumps(future_diff))
-    with open("move_diff.json", "w") as f:
-        f.write(json.dumps(move_diff))
-    with open("perpetual.json", "w") as f:
-        f.write(json.dumps(perpetual))
+    # with open("move_diff.json", "w") as f:
+    #     f.write(json.dumps(move_diff))
+    # with open("perpetual.json", "w") as f:
+    #     f.write(json.dumps(perpetual))
 
 
 if __name__ == "__main__":
