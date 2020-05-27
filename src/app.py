@@ -1,6 +1,9 @@
 import ccxt
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
+from decimal import getcontext, Decimal
+
+getcontext().prec = 6
 
 ftx = ccxt.ftx()
 
@@ -28,6 +31,7 @@ def get_perpetual(futures):
     for i in nextFundingRate_data:
         del i["openInterest"]
         del i["volume"]
+        i["24hrate"] = str(Decimal(i["nextFundingRate"]) * 24 * 100) + "%"
     return nextFundingRate_data
 
 
@@ -72,8 +76,9 @@ def get_future_diff(futures):
         spot_name = name.split("-")[0] + r"/USD"
         if markets.get(spot_name, False):
             spot_price = markets[spot_name]["info"]["price"]
-            diff = round(abs(i["mark"] - spot_price), 2)
-            rate = str(round((diff / spot_price) * 100, 3)) + "%"
+            diff = abs(Decimal(i["mark"]) - Decimal(spot_price))
+            rate = str(Decimal(diff) / Decimal(spot_price) * 100) + "%"
+            diff = str(diff)
             print(f"name:{name},期货价:{i['mark']},现货价:{ spot_price},差价:{diff},差价%:{rate}")
             future_diff.append(
                 {
@@ -84,7 +89,7 @@ def get_future_diff(futures):
                     "rate": rate,
                 }
             )
-    return sorted(future_diff, key=lambda k: k["diff"], reverse=True)
+    return sorted(future_diff, key=lambda k: k["rate"], reverse=True)
 
 
 def main():
