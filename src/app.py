@@ -97,15 +97,15 @@ def get_future_diff(futures):
 def main():
     futures = ftx.public_get_futures()["result"]
     future_diff = get_future_diff(futures)
-    # move_diff = get_btc_move_diff(futures)
-    # perpetual = get_perpetual(futures)[:20]
+    move_diff = get_btc_move_diff(futures)
+    perpetual = get_perpetual(futures)[:20]
 
     with open("future_diff.json", "w") as f:
         f.write(json.dumps(future_diff))
-    # with open("move_diff.json", "w") as f:
-    #     f.write(json.dumps(move_diff))
-    # with open("perpetual.json", "w") as f:
-    #     f.write(json.dumps(perpetual))
+    with open("move_diff.json", "w") as f:
+        f.write(json.dumps(move_diff))
+    with open("perpetual.json", "w") as f:
+        f.write(json.dumps(perpetual))
 
 
 if __name__ == "__main__":
