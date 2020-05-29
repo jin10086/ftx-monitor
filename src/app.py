@@ -2,6 +2,7 @@ import ccxt
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from decimal import getcontext, Decimal
+from sendMail import sendMail
 
 getcontext().prec = 6
 
@@ -51,16 +52,18 @@ def get_btc_move_diff(futures):
             diff = round(abs(abs(c - strikePrice) - mark), 4)
             c1 = round(abs(c - strikePrice), 4)  ## 预计交割价
             print(f"{name}: 行权价:{strikePrice}, BTC指数价:{c}, move价格:{mark},差价:{diff}")
-            btc_moves.append(
-                {
-                    "index": c,
-                    "mark": mark,
-                    "strikePrice": strikePrice,
-                    "diff": diff,
-                    "name": name,
-                    "c1": c1,
-                }
-            )
+
+            _append = {
+                "index": c,
+                "mark": mark,
+                "strikePrice": strikePrice,
+                "diff": diff,
+                "name": name,
+                "c1": c1,
+            }
+            btc_moves.append(_append)
+            if diff > 500:
+                sendMail("FTX MOVE 差价大于500了", json.dumps(_append), ["igaojin@qq.com"])
     return sorted(btc_moves, key=lambda k: k["diff"], reverse=True)
 
 
