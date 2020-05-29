@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from decimal import getcontext, Decimal
 from sendMail import sendMail
+from balance_monitor import getBalance
 
 getcontext().prec = 6
 
@@ -109,6 +110,8 @@ def main():
         f.write(json.dumps(move_diff))
     with open("perpetual.json", "w") as f:
         f.write(json.dumps(perpetual))
+
+    getBalance()
 
 
 if __name__ == "__main__":
