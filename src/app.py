@@ -4,6 +4,8 @@ import json
 from decimal import getcontext, Decimal
 from sendMail import sendMail
 from balance_monitor import getBalance
+from diskcache import Index
+import time
 
 getcontext().prec = 6
 
@@ -64,7 +66,19 @@ def get_btc_move_diff(futures):
             }
             btc_moves.append(_append)
             if diff > 500:
-                sendMail("FTX MOVE 差价大于500了", json.dumps(_append), ["igaojin@qq.com"])
+                result = Index("data/result")
+                if name in result:
+                    t = result[name]  # 上次发邮件时间
+                    if int(time.time()) - t > 60 * 60:  # 超过一小时
+                        sendMail(
+                            "FTX MOVE 差价大于500了", json.dumps(_append), ["igaojin@qq.com"]
+                        )
+                        result[name] = int(time.time())
+                else:
+                    sendMail(
+                        "FTX MOVE 差价大于500了", json.dumps(_append), ["igaojin@qq.com"]
+                    )
+                    result[name] = int(time.time())
     return sorted(btc_moves, key=lambda k: k["diff"], reverse=True)
 
 

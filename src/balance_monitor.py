@@ -10,9 +10,9 @@ ERC_20_TOKENS = ["TUSD", "USDC", "PAX", "BUSD", "USDT", "HUSD"]
 
 def getBTCBalance():
     print("get btc balance...")
-    url = f"https://chain.api.btc.com/v3/address/{btc_address}"
+    url = f"https://api.blockcypher.com/v1/btc/main/addrs/{btc_address}/balance"
     z1 = requests.get(url)
-    balance = z1.json()["data"]["balance"]
+    balance = z1.json()["balance"]
     return balance / 1e8
 
 
