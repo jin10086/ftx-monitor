@@ -138,24 +138,30 @@ def get_comp_order_book(futures):
                     msg[comp] = {"asks": [], "bids": []}
                     msg[comp]["bids"].append(i)
     if msg:
+        new_msg = {}
+        for k, v in msg.items():
+            if v["asks"] and v["bids"]:
+                new_msg[k] = v
         result = Index("data/result")
         send_txt = ""
-        for k, v in msg.items():
-            send_txt += k
-            send_txt += "\n\n"
-            send_txt += json.dumps(v)
-            send_txt += "\n\n"
+        msg = new_msg
+        if msg:
+            for k, v in msg.items():
+                send_txt += k
+                send_txt += "\n\n"
+                send_txt += json.dumps(v)
+                send_txt += "\n\n"
 
-        if name in result:
-            before_data = result[name]
-            if msg != before_data:
-                sendMail(
-                    "COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"]
-                )
+            if name in result:
+                before_data = result[name]
+                if msg != before_data:
+                    sendMail(
+                        "COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"]
+                    )
+                    result[name] = msg
+            else:
+                sendMail("COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"])
                 result[name] = msg
-        else:
-            sendMail("COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"])
-            result[name] = msg
 
 
 def main():
