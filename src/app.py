@@ -171,7 +171,7 @@ def main():
     with open("perpetual.json", "w") as f:
         f.write(json.dumps(perpetual))
 
-    getBalance()
+    # getBalance()
     get_comp_order_book(futures)
 
 
