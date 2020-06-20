@@ -113,6 +113,7 @@ def get_future_diff(futures):
 
 
 def get_comp_order_book(futures):
+    print("查找comp挂单大于50的")
     msg = {}
     name = "comp_alarm"
     ALARM_SIZE = 50
