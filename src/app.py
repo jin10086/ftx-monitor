@@ -112,6 +112,51 @@ def get_future_diff(futures):
     return sorted(future_diff, key=lambda k: k["rate1"], reverse=True)
 
 
+def get_comp_order_book(futures):
+    msg = {}
+    name = "comp_alarm"
+    ALARM_SIZE = 50
+    # msg["COMP-PERP"]["asks"][[187.1, 1.0471], [187.1, 1.0471]]
+    comp_pd = [i["name"] for i in futures if "COMP" in i["name"]]
+    for comp in comp_pd:
+        orderbook = ftx.fetch_order_book(comp, 30)
+        for i in orderbook["asks"]:
+            price, size = i
+            if size >= ALARM_SIZE:
+                if comp in msg:
+                    msg[comp]["asks"].append(i)
+                else:
+                    msg[comp] = {"asks": [], "bids": []}
+                    msg[comp]["asks"].append(i)
+        for i in orderbook["bids"]:
+            price, size = i
+            if size >= ALARM_SIZE:
+                if comp in msg:
+                    msg[comp]["bids"].append(i)
+                else:
+                    msg[comp] = {"asks": [], "bids": []}
+                    msg[comp]["bids"].append(i)
+    if msg:
+        result = Index("data/result")
+        send_txt = ""
+        for k, v in msg.items():
+            send_txt += k
+            send_txt += "\n\n"
+            send_txt += json.dumps(v)
+            send_txt += "\n\n"
+
+        if name in result:
+            before_data = result[name]
+            if msg != before_data:
+                sendMail(
+                    "COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"]
+                )
+                result[name] = msg
+        else:
+            sendMail("COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"])
+            result[name] = msg
+
+
 def main():
     futures = ftx.public_get_futures()["result"]
     future_diff = get_future_diff(futures)
@@ -126,6 +171,7 @@ def main():
         f.write(json.dumps(perpetual))
 
     getBalance()
+    get_comp_order_book(futures)
 
 
 if __name__ == "__main__":
