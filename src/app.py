@@ -112,8 +112,9 @@ def get_future_diff(futures):
     return sorted(future_diff, key=lambda k: k["rate1"], reverse=True)
 
 
-def get_comp_order_book(futures):
+def get_comp_order_book():
     print("查找comp挂单大于50的")
+    futures = ftx.public_get_futures()["result"]
     msg = {}
     name = "comp_alarm"
     ALARM_SIZE = 50
@@ -156,11 +157,15 @@ def get_comp_order_book(futures):
                 before_data = result[name]
                 if msg != before_data:
                     sendMail(
-                        "COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"]
+                        "COMP有挂单超过50了",
+                        send_txt,
+                        ["igaojin@qq.com", "woody168@gmail.com"],
                     )
                     result[name] = msg
             else:
-                sendMail("COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"])
+                sendMail(
+                    "COMP有挂单超过50了", send_txt, ["igaojin@qq.com", "woody168@gmail.com"]
+                )
                 result[name] = msg
 
 
@@ -178,7 +183,6 @@ def main():
         f.write(json.dumps(perpetual))
 
     # getBalance()
-    get_comp_order_book(futures)
 
 
 if __name__ == "__main__":
