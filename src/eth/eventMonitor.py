@@ -1,5 +1,8 @@
 from web3 import Web3, WebsocketProvider
 import json
+from sendMail import sendMail
+
+import os, sys, time
 
 w3 = Web3(
     WebsocketProvider("wss://mainnet.infura.io/ws/v3/cd42b3642f1441629f66000f8e544d5d")
@@ -13,21 +16,44 @@ comp = w3.eth.contract(
 )
 a1 = comp.events.Transfer.createFilter(fromBlock="latest", toBlock="pending")
 
-while True:
-    c = a1.get_new_entries()
-    for i in c:
-        amount = i["args"]["amount"]
-        amount = w3.fromWei(amount, "ether")
-        if amount < 1000:  # 大于1000 alarm
-            continue
-        f = i["args"]["from"]
-        to = i["args"]["to"]
-        txhash = w3.toHex(i["transactionHash"])
-        print(
-            f"""发现超过1000COMP的转账!
-        发现者:{f}
-        接收者:{to}
-        金额:{amount}
-        txhash:{txhash}
-        """
-        )
+
+def go():
+    while True:
+        c = a1.get_new_entries()
+        for i in c:
+            amount = i["args"]["amount"]
+            amount = w3.fromWei(amount, "ether")
+            if amount < 1:  # 大于1000 alarm
+                continue
+            f = i["args"]["from"]
+            to = i["args"]["to"]
+            txhash = w3.toHex(i["transactionHash"])
+            msg = f"""发送者:{f}
+
+接收者:{to}
+
+金额:{amount}
+
+txhash:https://cn.etherscan.com/tx/{txhash}
+"""
+            print("发送邮件中...")
+            sendMail("发现超过1000COMP的转账!", msg, ["igaojin@qq.com"])
+
+
+def main():
+    print("AutoRes is starting")
+
+    go()
+
+    executable = sys.executable
+    args = sys.argv[:]
+    print(args)
+    args.insert(0, sys.executable)
+
+    time.sleep(1)
+    print("Respawning")
+    os.execvp(executable, args)
+
+
+if __name__ == "__main__":
+    main()
