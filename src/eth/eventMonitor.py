@@ -23,7 +23,7 @@ def go():
         for i in c:
             amount = i["args"]["amount"]
             amount = w3.fromWei(amount, "ether")
-            if amount < 1:  # 大于1000 alarm
+            if amount < 1000:  # 大于1000 alarm
                 continue
             f = i["args"]["from"]
             to = i["args"]["to"]
