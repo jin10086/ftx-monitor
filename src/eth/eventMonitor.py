@@ -14,10 +14,11 @@ with open("erc20.json") as f:
 comp = w3.eth.contract(
     address="0xc00e94Cb662C3520282E6f5717214004A7f26888", abi=erc20abi
 )
-a1 = comp.events.Transfer.createFilter(fromBlock="latest", toBlock="pending")
 
 
 def go():
+    a1 = comp.events.Transfer.createFilter(fromBlock="latest", toBlock="pending")
+    print("开始检测大于500的comp转账")
     while True:
         c = a1.get_new_entries()
         for i in c:
