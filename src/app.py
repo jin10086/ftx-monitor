@@ -120,7 +120,7 @@ def get_comp_order_book(futures):
     # msg["COMP-PERP"]["asks"][[187.1, 1.0471], [187.1, 1.0471]]
     comp_pd = [i["name"] for i in futures if "COMP" in i["name"]]
     for comp in comp_pd:
-        orderbook = ftx.fetch_order_book(comp, 30)
+        orderbook = ftx.fetch_order_book(comp, 1)
         for i in orderbook["asks"]:
             price, size = i
             if size >= ALARM_SIZE:
