@@ -37,7 +37,7 @@ def go():
 txhash:https://cn.etherscan.com/tx/{txhash}
 """
             print("发送邮件中...")
-            sendMail("发现超过1000COMP的转账!", msg, ["igaojin@qq.com"])
+            sendMail("发现超过500COMP的转账!", msg, ["igaojin@qq.com"])
 
 
 def main():
