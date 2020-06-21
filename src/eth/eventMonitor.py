@@ -5,7 +5,10 @@ from sendMail import sendMail
 import os, sys, time
 
 w3 = Web3(
-    WebsocketProvider("wss://mainnet.infura.io/ws/v3/cd42b3642f1441629f66000f8e544d5d")
+    WebsocketProvider(
+        "wss://mainnet.infura.io/ws/v3/cd42b3642f1441629f66000f8e544d5d",
+        websocket_timeout=30,
+    )
 )
 
 with open("erc20.json") as f:
