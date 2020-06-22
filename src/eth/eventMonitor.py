@@ -33,6 +33,8 @@ def go():
             if amount < 500:  # 大于1000 alarm
                 continue
             f = i["args"]["from"]
+            if f == "0x8248C5709b0835366821d0cAe83bdB7e2cf66a53":
+                continue
             to = i["args"]["to"]
             txhash = w3.toHex(i["transactionHash"])
             msg = f"""发送者:{f}
