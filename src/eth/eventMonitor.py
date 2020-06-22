@@ -1,6 +1,9 @@
 from web3 import Web3, WebsocketProvider
 import json
 from sendMail import sendMail
+from diskcache import Index
+
+result = Index("data/result")
 
 import os, sys, time
 
@@ -41,7 +44,20 @@ def go():
 txhash:https://cn.etherscan.com/tx/{txhash}
 """
             print("发送邮件中...")
-            sendMail("发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"])
+            if "txs" in result:
+                txhashs = result["txs"]
+                if txhash not in txhashs:
+                    txhashs.append(txhash)
+                    sendMail(
+                        "发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"]
+                    )
+
+            else:
+                txhashs = [txhash]
+                result["txs"] = txhashs
+                sendMail(
+                    "发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"]
+                )
 
 
 def main():
