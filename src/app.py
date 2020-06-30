@@ -65,7 +65,7 @@ def get_btc_move_diff(futures):
                 "c1": c1,
             }
             btc_moves.append(_append)
-            if diff > 500:
+            if diff > 3000:
                 result = Index("data/result")
                 if name in result:
                     t = result[name]  # 上次发邮件时间
