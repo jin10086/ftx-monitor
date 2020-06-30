@@ -22,27 +22,20 @@ def getBalance():
     z1 = requests.get(url)
     c1 = {}
     c1["ETH"] = z1.json()["ETH"]["balance"]
+    usdBalance = 0
     for token in z1.json()["tokens"]:
         symbol = token["tokenInfo"]["symbol"]
         if symbol in ERC_20_TOKENS:
             decimals = int(token["tokenInfo"]["decimals"])
             balance = token["balance"] / pow(10, decimals)
-            c1[symbol] = balance
+            usdBalance += balance
+            # c1[symbol] = balance
     btc = getBTCBalance()
     c1["BTC"] = btc
     c1["updatetime"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    c1["USD"] = usdBalance
     # "ETH", "TUSD", "USDC", "PAX", "BUSD", "USDT", "HUSD", "BTC"
-    c2 = [
-        c1["updatetime"],
-        c1["ETH"],
-        c1["TUSD"],
-        c1["USDC"],
-        c1["PAX"],
-        c1["BUSD"],
-        c1["USDT"],
-        c1["HUSD"],
-        c1["BTC"],
-    ]
+    c2 = [c1["updatetime"], c1["ETH"], c1["BTC"], c1["USD"]]
     with open("balance.json", "r") as f:
         old_data = json.loads(f.read())
 

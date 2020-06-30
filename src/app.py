@@ -182,7 +182,7 @@ def main():
     with open("perpetual.json", "w") as f:
         f.write(json.dumps(perpetual))
 
-    # getBalance()
+    getBalance()
 
 
 if __name__ == "__main__":
