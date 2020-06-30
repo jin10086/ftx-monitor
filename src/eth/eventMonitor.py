@@ -50,16 +50,18 @@ txhash:https://cn.etherscan.com/tx/{txhash}
                 txhashs = result["txs"]
                 if txhash not in txhashs:
                     txhashs.append(txhash)
-                    sendMail(
-                        "发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"]
-                    )
+                    # sendMail(
+                    #     "发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"]
+                    # )
+                    print(msg)
 
             else:
                 txhashs = [txhash]
                 result["txs"] = txhashs
-                sendMail(
-                    "发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"]
-                )
+                # sendMail(
+                #     "发现超过500COMP的转账!", msg, ["igaojin@qq.com", "woody168@gmail.com"]
+                # )
+                print(msg)
 
 
 def main():
