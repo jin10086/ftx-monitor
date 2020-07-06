@@ -157,7 +157,7 @@ def get_comp_order_book():
                 before_data = result[name]
                 if msg != before_data:
                     sendMail(
-                        "COMP有挂单超过50了",
+                        f"{k} 有挂单超过50了",
                         send_txt,
                         ["igaojin@qq.com", "woody168@gmail.com"],
                     )
