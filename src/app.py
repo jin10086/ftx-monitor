@@ -113,11 +113,11 @@ def get_future_diff(futures):
 
 
 def get_comp_order_book():
-    print("查找comp挂单大于50的")
+    print("查找comp挂单大于100的")
     futures = ftx.public_get_futures()["result"]
     msg = {}
     name = "comp_alarm"
-    ALARM_SIZE = 50
+    ALARM_SIZE = 100
     # msg["COMP-PERP"]["asks"][[187.1, 1.0471], [187.1, 1.0471]]
     comp_pd = [i["name"] for i in futures if "COMP" in i["name"]]
     for comp in comp_pd:
@@ -157,7 +157,7 @@ def get_comp_order_book():
                 before_data = result[name]
                 if msg != before_data:
                     sendMail(
-                        f"{k} 有挂单超过50了",
+                        f"{k} 有挂单超过100了",
                         send_txt,
                         ["igaojin@qq.com", "woody168@gmail.com"],
                     )
